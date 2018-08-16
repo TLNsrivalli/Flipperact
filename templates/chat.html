@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flipperact</title>
+
+</head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<style>
+{
+ margin: 0;
+ padding: 0;
+ font-family: tahoma, sans-serif;
+ box-sizing: border-box;
+}
+
+body {
+ background: #00A9E0;
+}
+
+.chatbox {
+ width: 500px;
+ min-width: 390px;
+ height: 600px;
+ background: #F8E831;
+ padding: 25px;
+ margin: 20px auto;
+ box-shadow: 0 3px #ccc;
+}
+
+.chatlogs {
+ padding: 10px;
+ width: 100%;
+ height: 450px;
+ overflow-x: hidden;
+ overflow-y: scroll;
+}
+
+.chatlogs::-webkit-scrollbar {
+ width: 10px;
+}
+
+.chatlogs::-webkit-scrollbar-thumb {
+ border-radius: 5px;
+ background: rgba(0,0,0,.1);
+}
+
+.chat {
+ display: flex;
+ flex-flow: row wrap;
+ align-items: flex-start;
+ margin-bottom: 10px;
+}
+
+
+.chat .user-photo {
+ width: 60px;
+ height: 60px;
+ background: #ccc;
+ border-radius: 50%;
+}
+
+.chat .chat-message {
+ width: 80%;
+ padding: 15px;
+ margin: 5px 10px 0;
+ border-radius: 10px;
+ color: #fff;
+ font-size: 20px;
+}
+
+.friend .chat-message {
+ background: #1adda4;
+}
+
+.self .chat-message {
+ background: #1ddced;
+ order: -1;
+}
+
+.chat-form {
+ margin-top: 20px;
+ display: flex;
+ align-items: flex-start;
+}
+
+.chat-form textarea {
+ background: #fbfbfb;
+ width: 75%;
+ height: 50px;
+ border: 2px solid #eee;
+ border-radius: 3px;
+ resize: none;
+ padding: 10px;
+ font-size: 18px;
+ color: #333;
+}
+
+.chat-form textarea:focus {
+ background: #fff;
+}
+
+.chat-form button {
+ background: #1ddced;
+ padding: 5px 15px;
+ font-size: 30px;
+ color: #fff;
+ border: none;
+ margin: 0 10px;
+ border-radius: 3px;
+ box-shadow: 0 3px 0 #0eb2c1;
+ cursor: pointer;
+
+ -webkit-transaction: background .2s ease;
+ -moz-transaction: backgroud .2s ease;
+ -o-transaction: backgroud .2s ease;
+}
+
+.chat-form button:hover {
+ background: #13c8d9;
+}
+
+</style>
+<body>
+	<a href = "/flipperact_homepage"><img src="static/img/backbutton.png" height = "40px" width = "40px"></a>
+	<center><h2><img src="static/img/UserImage.jpg" height = "40px" width = "40px">
+	 {{session['chat_friend']}}</h2></center>
+	<div class="chatbox">
+		<div class="chatlogs">
+      {% for c in chat %}
+				{% if (c.recusername == session['chat_friend'] or c.senderusername == session['chat_friend']) and (c.sendermobile == session['mobile'] or c.recmobile == session['mobile']) %}
+
+      	{% if c.sendermobile != session['mobile'] %}
+          <div class="chat friend">
+						{% if c.message_type == "product" %}
+							{{products[c.text - 1].title}}<br>
+							<img src="static/img/{{products[c.text - 1].image}}" height="225px" width="125px"><br>
+							&nbsp&nbspRs.{{products[c.text - 1].price}}<br>
+							<form action="/buy" method="POST">
+								<input type="hidden" name = "product_id" value = {{products[c.text - 1].id}}>
+							&nbsp<input type="submit" class="btn btn-primary" value="Buy"><br>
+						</form>
+						{% endif %}
+						{% if c.message_type == "text" %}
+				    	<p class="chat-message">{{c.text}}</p><br>
+						{% endif %}
+            <br>Recieved {{c.time}}
+          </div>
+      {% endif %}
+      {% if c.sendermobile == session['mobile'] %}
+        <div class="chat self">
+					{% if c.message_type == "product" %}
+						{{products[c.text - 1].title}}<br>
+						<img src="static/img/{{products[c.text - 1].image}}" height="225px" width="125px"><br>
+						&nbsp&nbspRs.{{products[c.text - 1].price}}<br>
+						<form action="/buy" method="POST">
+							<input type="hidden" name = "product_id" value = {{products[c.text - 1].id}}>
+							&nbsp<input type="submit" class="btn btn-primary" value="Buy"><br>
+						</form>
+					{% endif %}
+					{% if c.message_type == "text" %}
+          	<p class="chat-message">{{c.text}}</p><br>
+					{% endif %}
+          <br>Sent {{c.time}}
+        </div>
+      {% endif %}
+			{% endif %}
+      {% endfor %}
+		</div>
+    <form action = "/sendmessage" method = "POST">
+		<div class="chat-form">
+      <input type="hidden" name="sendermobile"value={{chat['sendermobile']}}>
+      <input type="hidden" name="recmobile"value={{chat['recmobile']}}>
+      <input type="hidden" name="senderusername"value={{chat['senderusername']}}>
+      <input type="hidden" name="recusername"value={{chat['recusername']}}>
+      <textarea name="message_to_send" placeholder="Type a message"></textarea>
+			<input type = "submit" class="btn btn-success" value = "Send">
+		</div>
+	</div>
+</body>
+</html>

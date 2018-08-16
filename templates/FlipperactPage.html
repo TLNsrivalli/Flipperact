@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js">
+    <title>Flipperact</title>
+  </head>
+
+  <body>
+
+    <header>
+      <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+        <div class="navbar-collapse collapse">
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="navbar-brand" href="/home">
+            <img src="static/img/flipkart_Logo.png" alt="Logo" style="width:100px;">
+            </a>
+          </li>
+          &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          <li class="nav-item active">
+            <form class="form-inline" action="">
+              <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search for products,brands and more">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><img src="static/img/search.png" alt="Logo" style="width:20px;"></span>
+              </div>
+              </div>
+            </form>
+          </li>
+          &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          <li class="nav-item active">
+              <a class="nav-link" href="/flipperact">Flipperact</a>
+          </li>
+          &nbsp&nbsp
+          &nbsp&nbsp
+          <li class="nav-item active">
+              <a class="nav-link" href="#">More</a>
+         </li>
+         &nbsp&nbsp
+         <li class="nav-item active">
+             <a class="nav-link" href="/cart">My Orders</a>
+         </li>
+         &nbsp&nbsp
+         <li class="nav-item active">
+             <a class="nav-link" href="/logout">Logout</a>
+         </li>
+        </ul>
+      </div>
+      </nav>
+    </header>
+
+
+    <main role="main">
+
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">FLIPPERACT</h1>
+          <p class="lead text-muted">Your space to share, discuss, chat and send presents with your folks!</p>
+          <p>
+            <form action = "/search_friends" method = "POST">
+            <div class="form-group">
+              <input type="text" name="search_data" placeholder="Search by username" value={{request.form.search_data}}>&nbsp<input type="submit" class="btn btn-primary" value="Search">
+            </div>
+            </form>
+          </p>
+        </div>
+      </section>
+
+      <center><font color="#3498DB">
+        <center><a href="#" class="btn btn-secondary my-2">My Friends</a></font><br></center>
+        {% for friends in friends_list %}
+        <form action = "/chat" method = "POST">
+          <div class="form-group">
+            <input type="hidden" name="chat_friend"value={{friends.friend_username}}>
+          </div>
+          <img src="static/img/UserImage.jpg" height = "40px" width = "40px">
+          <input type="submit" class="btn btn-primary" value={{friends.friend_username}}><br>
+        </form>
+        {% endfor %}
+      </center>
+
+      <div class="album py-5 bg-light">
+        <div class="container">
+          <center><h1 class="jumbotron-heading">Birthday Reminder</h1></center>
+          {% for birthday in birthday_list %}
+            <h3><font color = #047BD5>&nbsp<b>{{birthday}}'s birthday is in this week! Buy these presents will make her day!</font><b><br><br></h3></font>
+          <div class="row">
+            {% for g in gifts %}
+            <div class="col-md-4">
+              <form action = "/buygift" method = "POST">
+                <input type="hidden" name = "friend_username" value = {{birthday}}>
+                <input type = "hidden" name = "gift_id" value = {{g.gift_id}}>
+                <input type = "hidden" name = "gift_price" value = {{g.gift_price}}>
+              <div class="card mb-4 shadow-sm">
+                <img class="card-img-top" src="static/img/{{g.gift_image}}" alt="Card image cap" height="250px" width="225px">
+                <div class="card-body">
+                  <p class="card-text">{{g.gift_name}}Rs.{{g.gift_price}}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <button type="submit" class="btn btn-sm btn-outline-secondary">Buy</button>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            </div>
+            {% endfor %}
+      </div>
+      {% endfor %}
+    </main>
+
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">Back to top</a>
+        </p>
+        <p> &copy; Flipkart2018</p>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/vendor/holder.min.js"></script>
+  </body>
+</html>
